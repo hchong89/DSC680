@@ -13,26 +13,26 @@ times.
 
 Dataset 
 
-• Consumer complaint dataset (financial domain)  
-• Includes complaint text, categories, and resolution outcomes  
+Consumer complaint dataset (financial domain)  
+Includes complaint text, categories, and resolution outcomes  
 
 Methods 
 
-• Text preprocessing and feature extraction (TF-IDF)  
-• Logistic Regression with class balancing  
-• Model evaluation using:  
- Accuracy  
- Precision & Recall  
- ROC-AUC  
+Text preprocessing and feature extraction (TF-IDF)  
+Logistic Regression with class balancing  
+Model evaluation using:  
+Accuracy  
+Precision & Recall  
+ROC-AUC  
 
 Results 
 
-• Logistic Regression achieved strong baseline performance (~0.77 ROC-AUC)  
-• Class balancing improved recall for minority cases  
-• Model demonstrates potential for real-world complaint triaging  
+Logistic Regression achieved strong baseline performance (~0.77 ROC-AUC)  
+Class balancing improved recall for minority cases  
+Model demonstrates potential for real-world complaint triaging  
 
 Tools & Technologies 
-• Python  
-• Scikit-learn  
-• Pandas, NumPy  
-• NLP (TF-IDF) 
+Python  
+Scikit-learn  
+Pandas, NumPy  
+NLP (TF-IDF) 
