@@ -1,0 +1,280 @@
+---
+title: "Milestone Project"
+author: "Hae Ji Chong"
+date: "2024-02-12"
+output: pdf_document
+---
+## Introduction
+
+Money is one thing that is essential in everyone's life.' It can bring joy to someone's life, or it can bring a misery to one's life as well.
+I have decided to research on the relationship between income, happiness, and suicidal rates.
+
+## Research questions
+
+In higher income countries, are they more happier than lower income countries?
+Does higher income means suicial rate goes down?
+If the happiness rate is higher, does that also bring down the suicidal rate?
+Has it changed within 3 years period, 2015-2017?
+Looking at the data, are we able to predict what the rate would be for the future?
+
+## Approach
+
+I plan to use the datasets to find the relationship among all three. If one goes up, does the other one goes down?
+Or do they move in the same direction? 
+Also, how has it changed over the time, do they tend to move in same direction every year, are we able to predict the future with these datas?
+
+## How your approach addresses (fully or partially) the problem.
+
+By using this approach, it will state if the income does increase the happiness and brings down the suicidal rate.
+And by looking at the data, how strong is the correlation? Are we able to say we see a clear relationship?
+
+## Data  (Minimum of 3 Datasets - but no requirement on number of fields or rows)
+
+https://www.kaggle.com/datasets/unsdsn/world-happiness/data
+
+This shows the happiness level of each country
+
+https://www.kaggle.com/datasets/frankmollard/income-by-country?rvi=1
+It has the average income by country
+https://www.kaggle.com/datasets/sandragracenelson/suicide-rate-of-countries-per-every-year
+
+It shows the suicide rate of countries per year.
+Looking at all three data, I am able to obtain happiness, income, and suicidal rate for 2015- 2018.
+I plan on analyzing those four years to see if I can find the relationship.
+Income data does have an odd variable at the end, I plan on deleting to make the data cleaner.
+
+## Required Packages
+ggplot2
+tidyr
+dplyr
+
+## Plots and Table Needs
+
+I plan on using scatter plots to see the relationship. I would also do correlation test to get the p-value.
+How strong is p-value to state that is positive/negative correlation?
+
+## Questions for future steps
+
+I would need to look into the data sets to see what cleaning needs to be done, such as deleting unnecessary columns.
+With the data I have, I need to make sure all three datsets have same countries.
+
+### Part 2
+```{r}
+library(readxl)
+library(dplyr)
+```
+
+## How did you import and clean your data?
+```{r}
+suicide_rate <- read.csv("/Users/my-lo/OneDrive/Desktop/DSC 520/Milestone 1 datasets/suicidal rate by country/suiciderateall.csv")
+income_rate <- read_xlsx("/Users/my-lo/OneDrive/Desktop/DSC 520/Milestone 1 datasets/income by country/Income by Country.xlsx", sheet="GNI per capita")
+happiness_rate_2015 <- read.csv("/Users/my-lo/OneDrive/Desktop/DSC 520/Milestone 1 datasets/happiness rate by country/2015.csv")
+happiness_rate_2016 <- read.csv("/Users/my-lo/OneDrive/Desktop/DSC 520/Milestone 1 datasets/happiness rate by country/2016.csv")
+happiness_rate_2017 <- read.csv("/Users/my-lo/OneDrive/Desktop/DSC 520/Milestone 1 datasets/happiness rate by country/2017.csv")
+```
+I first loaded all the data, for income data I used GNI sheet since I needed look at Gross National Income
+```{r}
+happiness_rate_2015 <- happiness_rate_2015[order(happiness_rate_2015$Country), ]
+happiness_rate_2016 <- happiness_rate_2016[order(happiness_rate_2016$Country), ]
+happiness_rate_2017 <- happiness_rate_2017[order(happiness_rate_2017$Country), ]
+names(happiness_rate_2015)[names(happiness_rate_2015) == 'Happiness.Score'] <- 'happiness_score_2015'
+names(happiness_rate_2016)[names(happiness_rate_2016) == 'Happiness.Score'] <- 'happiness_score_2016'
+names(happiness_rate_2017)[names(happiness_rate_2017) == 'Happiness.Score'] <- 'happiness_score_2017'
+```
+For the happiness data, I decided to put country name by alphabetical order and renamed them to happiness_score_year to make the data more viewer friendly. For income and suicidal rate, country list was already in alphabetical order.
+```{r}
+happiness_combined<- merge(happiness_rate_2015,happiness_rate_2016,by="Country", all = FALSE)
+happiness_combined<- merge(happiness_combined,happiness_rate_2017,by="Country",all = FALSE)
+```
+I than combined happpiness rate, only included the country that was listd in all three years. I compared 2015 and 2016 first, than compared 2017 with the above file.
+```{r}
+suicide_rate$Country<-gsub("[^[:alnum:] ]","",suicide_rate$Country)
+```
+I removed * at the end of the country in suicide rate.
+```{r}
+new_suicide_rate <- suicide_rate[(as.character(suicide_rate$Country) %in% as.character(income_rate$Country)), ]
+new_income_rate <- income_rate[(as.character(income_rate$Country) %in% as.character(new_suicide_rate$Country)), ]
+new_happiness_combined <-happiness_combined[(as.character(happiness_combined$Country) %in% as.character(new_income_rate$Country)), ]
+new_suicide_rate <- suicide_rate[(as.character(suicide_rate$Country) %in% as.character(new_happiness_combined$Country)), ]
+new_income_rate <- income_rate[(as.character(income_rate$Country) %in% as.character(new_suicide_rate$Country)), ]
+```
+Once again, I only kept the countries that were listed in all the data.
+```{r}
+happiness_allyear <- new_happiness_combined %>%
+  select(Country,happiness_score_2015,happiness_score_2016,happiness_score_2017)
+income_allyear <- new_income_rate %>%
+  select('Country','2015','2016','2017')
+suicide_allyear <-new_suicide_rate %>%
+  select(Country,X2015,X2016,X2017)
+all_data <-cbind(happiness_allyear,income_allyear,suicide_allyear)
+```
+With cleaned data that only listed all the countries I needed, I used dplyr and select function to only obtain the columns I need. Each file for happiness, income, and suicide included data for 2015-2017.
+```{r}
+new_all_df <- subset(all_data, select = -c(5,9))
+cols <- c("Country", "happi_2015","happi_2016","happi_2017","Inc_2015","Inc_2016","Inc_2017","Sui_2015","Sui_2016","Suic2017")
+colnames(new_all_df) <-cols
+```
+I now combined them and renamed them to understand what the numbers meant.
+
+## What does the final data set look like?
+```{r}
+head(new_all_df)
+```
+Included is my final data set, first six columns.
+
+## What information is not self-evident?
+
+It is not self-evident that all the variables has gone up or down in same direction every year.
+
+I expected the national income has gone up every year, but some countries like Angola has gone down as well.
+
+I cannot assume they have gone up each year, even though most countries have.
+Just by lookin at the data, it is not self-evident of the relationship.
+
+
+## What are different ways you could look at this data?
+
+I plan on using multiple plots to compare them by the year. Scatter plots would be one way.
+
+I plan comparing each country and whether their happiness, income, or suicidal rates change each year.
+
+I could also pick two variables at each time to compare their relationship.
+
+I also want to see if the patterns change in each year. For example, in 2015, was the correlation between happiness and income positive? How about for 2016 and 2017?
+
+
+## How do you plan to slice and dice the data?
+
+My final data includes all data, I plan on using my sliced data that only includes happiness, income, and suicide rate. In my data, they are named as happiness_allyear, income_allyear, and suicide_allyear
+
+I also plan on slicing the data by year, and plotting all three variables in one graph per year.
+
+
+## How could you summarize your data to answer key questions?
+
+To answer key questions, I plan on using ANOVA test. I would do anova test among all three variables to see how well it can predict.
+
+
+## What types of plots and tables will help you to illustrate the findings to your questions?
+
+Scatter plots would help me see the relationship among three variables. With scatter plot, I would draw a line to see how well it fits in a line. 
+
+I also plan on finding residuals using linear regression, and plotting using qqnorm function. Regarding table, summary of ANOVA test would be helpful.
+
+It will tell me how accurately it can predict the relationship.
+
+
+## Do you plan on incorporating any machine learning techniques to answer your research questions? Explain.
+
+I plan on incorporating linear regression to see if I can draw a line through the relationships. 
+
+I also plan on using summary of the linear regression to see how strong the correlation is.
+
+Is it strong enough to say it is related? I would also look at P-value to see if it is less than 0.05 to see their relationship.
+
+
+## What questions do you have now, that will lead to further analysis or additional steps?
+
+For further steps, I need to do further analysis to see which graphs or plots make the most sense to accurately show three relationships among variables. 
+
+I plan on having multiple plots in one graph to see the relationship, is that powerful and does that accurately measure the relationship?
+
+And, does that accurately align with what my linear regression method?
+
+### Part 3
+
+## Introduction.
+Money is a big part of someone's life. It can make someone happy, or someone sad.
+If people live in a country with higher income, and if that can lead to happiness, does it make sense to move to that area?
+
+## The problem statement you addressed.
+Problem statement I addressed was what are the relationship among all three variables.
+For those countries that are wealthier than others, are they more happier than those countries thare were poor?
+And because they have money, does the depression rate also goes down? 
+If the happiness goes up, do suicidal rate also goes down in same rate?
+I want to see if there is a trend among those three variables.
+
+## How you addressed this problem statement
+```{r}
+library(tidyverse)
+ggplot(data=new_all_df, aes(x=Inc_2015,y=Sui_2015,))+geom_point()+xlab("Income 2015")+ylab("Suicide rate 2015")+ggtitle("Income vs suicide rate for 2015")
+ggplot(data=new_all_df, aes(x=Inc_2016,y=Sui_2016,))+geom_point()+xlab("Income 2016")+ylab("Suicide rate 2016")+ggtitle("Income vs suicide rate for 2016")
+ggplot(data=new_all_df, aes(x=Inc_2017,y=Suic2017,))+geom_point()+xlab("Income 2017")+ylab("Suicide rate 2017")+ggtitle("Income vs suicide rate for 2017")
+
+ggplot(data=new_all_df, aes(x=Inc_2015,y=happi_2015,))+geom_point()+xlab("Income 2015")+ylab("Happiness rate 2015")+ggtitle("Income vs Happiness rate for 2015")
+ggplot(data=new_all_df, aes(x=Inc_2016,y=happi_2016,))+geom_point()+xlab("Income 2016")+ylab("Happiness rate 2016")+ggtitle("Income vs Happiness rate for 2016")
+ggplot(data=new_all_df, aes(x=Inc_2017,y=happi_2017,))+geom_point()+xlab("Income 2017")+ylab("Happiness rate 2017")+ggtitle("Income vs Happiness rate for 2017")
+```
+I addresssed this problem by analyzing all three variables. I have first drawn scatterplots of Income vs. happiness and income vs. suicidal rate.
+
+```{r}
+new_all_df$Inc_2015<-as.numeric(new_all_df$Inc_2015)
+new_all_df$Inc_2016<-as.numeric(new_all_df$Inc_2016)
+new_all_df$Inc_2017<-as.numeric(new_all_df$Inc_2017)
+```
+Because the income data type was "character", I had to change them to numeric for further analysis
+```{r}
+income_lm_2015 <- lm(formula=happi_2015~Inc_2015+Sui_2015, data=new_all_df)
+summary(income_lm_2015)
+income_lm_20152 <- lm(formula=happi_2015~Inc_2015, data=new_all_df)
+summary(income_lm_20152)
+income_lm_2016 <- lm(formula=happi_2016~Inc_2016+Sui_2016, data=new_all_df)
+summary(income_lm_2016)
+income_lm_2017 <- lm(formula=happi_2017~Inc_2017+Suic2017, data=new_all_df)
+summary(income_lm_2017)
+suicidal_lm <-lm(formula = Sui_2015~Inc_2015+happi_2015, data=new_all_df)
+summary(suicidal_lm)
+```
+Once I drew the scatterplot, I also did a linear regressison to see if I see the relationship of happines with income and suicidal rate. 
+When I did all 3 years, I noticed they were all similar.
+Because they were similar, I decided to focus the anlaysis of one year, which I picked as 2015.
+I did the linear regression of happiness just with income factor, without suicidal rate as well.
+I also did a linear regression of suicidal rate with income and happiness factor for the year of 2015.
+```{r}
+res <- resid(income_lm_2015)
+plot(fitted(income_lm_2015),res)
+abline(0,0)
+qqnorm(res)
+qqline(res)
+```
+
+I did plot the residual to see if I can say they are normal or not.
+With how well the line fits into each points, I can say it is normal.
+
+```{r}
+cor.test(new_all_df$happi_2015,new_all_df$Inc_2015)
+cor.test(new_all_df$Sui_2015,new_all_df$Inc_2015)
+cor.test(new_all_df$Sui_2015,new_all_df$happi_2015)
+```
+I also did a correlation test to see the correlation.
+
+## Analysis.
+By doing the analysis, I have to say there is a positive relationship between income and happiness because of high correlation.
+However, there was no strong relationship between income and suicidal rate, and suicidal rate and happiness.
+When I look at the year of 2015, linear regression of R squred came back as 52.07%. 
+With income and suicidal rate, we can predict on happiness 52.07% of the time.
+With linear regression of happiness just on the income factor, R squared was 51.53%. 
+Therefore, adding the suicidal rate with income factor increased the prediction rate of happiness.
+Linear regression of suicidal rate was not significant due to p-value higher than 0.05. 
+With R squared being 0.063, we can only predict 6% of the time by knowing happiness and income.
+
+## Implications. 
+This could imply that people tend to be happier in countries that are wealthier since they have higher income.
+Moving to a wealthier country and having an opportunity to have a high income could lead to happiness of one's life.
+However, high happiness rate does not imply lower suicidal rate.
+Some countries could have the highest happiness ranking, but they could also have high suicidal rate.
+With my data, we can predict happiness over 52% of the time by knowing income and suicidal rate, but it is hard to predict suicidal rate just by knowing income and happiness rate.
+
+## Limitations.
+My data is divided among countries. In countries like the U.S., some states are wealthier than the other states.
+For someone to learn more about the relationship, they could analyze within each countries.
+One other limitation is how they have collected the data of happiness. 
+Income and suicidal rate could be obtained objectively, but happiness is subjective. collecting the data on holiday season could be different than non holiday season as well.
+If we were able to find an objective way to obtain happiness, the data could be more reliable and accurate.
+
+## Concluding Remarks
+With my data, I can say there are some relationship betweeen happines and income. 
+It's hard to assume that happiness is caused by high income since there could be other factors between the two variables.
+Also, since the relationship between suicidal and income was not high enough, we can't say people with low income gets more depressed than people with high income.
+To build on my analysis, it would be interesting to see what other factors can have impact on one's happines.
+Instead of just looking at income as in GNI, gross national income, it would be interesting to include GDP, gross domestic product, in part of an analysis as well.
