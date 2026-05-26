@@ -57,8 +57,7 @@ The application includes:
 ---
 
 ## Files Included
-- `weather_app.py`
-- `screenshots/`
+- `weather_api.py`
 
 ---
 
