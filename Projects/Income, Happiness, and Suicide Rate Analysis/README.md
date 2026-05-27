@@ -90,9 +90,7 @@ The regression analysis suggested that income was a meaningful predictor of happ
 ---
 
 ## Files Included
-- `Project 1.Rmd` — Full R Markdown analysis
-- `Project-1.pdf` — Exported project report
-- `screenshots/` — Visualizations and statistical outputs
+- `Income happiness and suicidal rate.Rmd` — Full R Markdown analysis
 
 ---
 
