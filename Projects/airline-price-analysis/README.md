@@ -1,38 +1,114 @@
-Airline Ticket Price Analysis 
+# Airline Price Analysis
 
-Overview 
+## Overview
+This project analyzes the relationship between airline ticket prices, oil prices, and fuel costs to better understand factors that influence airline pricing trends. The analysis applies statistical modeling and machine learning techniques to evaluate how fuel-related variables impact airline industry pricing behavior.
 
-This project analyzes the relationship between airline ticket prices and oil prices to understand 
-how external economic factors influence airfare. The goal is to provide insights into optimal 
-booking strategies for consumers. 
+The project focuses on identifying patterns, trends, and predictive relationships using exploratory data analysis and regression modeling techniques.
 
-Problem 
+---
 
-Airline ticket prices are highly volatile and influenced by multiple variables. Consumers often 
-struggle to determine the best time to purchase tickets. This project investigates whether oil 
-prices significantly impact airline pricing. 
+## Technologies Used
+- Python
+- Pandas
+- NumPy
+- Matplotlib
+- Seaborn
+- Scikit-learn
+- Jupyter Notebook
 
-Dataset 
+---
 
-• Source: Kaggle  
-• Includes airline ticket prices and fuel-related variables  
+## Data Sources
+The project uses airline and fuel-related datasets containing:
+- Airline ticket prices
+- Oil prices
+- Fuel cost information
+- Historical pricing trends
+- Industry-related economic variables
 
-Methods 
+The datasets were cleaned, merged, and transformed to support predictive analysis and visualization.
 
-• Data cleaning and preprocessing  
-• Exploratory data analysis (EDA)  
-• Linear Regression (baseline model)  
-• Random Forest Regression (nonlinear modeling)  
+---
 
-Results 
+## Project Objectives
+- Analyze relationships between oil prices and airline ticket prices
+- Explore how fuel costs impact airline pricing trends
+- Apply regression and machine learning models
+- Visualize pricing behavior and industry trends
+- Compare model performance across predictive methods
 
-• Linear Regression showed moderate correlation  
-• Random Forest performed better, capturing nonlinear relationships  
-• Results suggest oil prices are a contributing factor, but not the only driver  
+---
 
-Tools & Technologies 
+## Data Preparation
+The project included:
+- Cleaning missing values
+- Merging multiple datasets
+- Formatting date variables
+- Handling outliers
+- Feature selection and preprocessing
+- Preparing datasets for modeling and visualization
 
-• Python  
-• Pandas, NumPy  
-• Scikit-learn  
-• Matplotlib / Seaborn
+---
+
+## Exploratory Data Analysis
+Several visualization techniques were used throughout the project, including:
+- Scatterplots
+- Correlation heatmaps
+- Trend analysis
+- Regression visualizations
+- Distribution analysis
+
+The analysis focused on identifying relationships between airline pricing and fuel-related variables.
+
+---
+
+## Machine Learning & Statistical Methods
+
+### Models Used
+- Linear Regression
+- Random Forest Regression
+
+### Evaluation Metrics
+- RMSE
+- MAE
+- R² Score
+
+The project compared traditional regression techniques with machine learning approaches to evaluate predictive performance.
+
+---
+
+## Key Findings
+- Oil prices demonstrated measurable influence on airline pricing trends
+- Random Forest models captured nonlinear relationships more effectively than standard linear regression
+- Airline pricing behavior was affected by multiple external economic variables
+- Fuel costs alone did not fully explain pricing variability, indicating additional market factors influence ticket prices
+
+---
+
+## Skills Demonstrated
+- Data cleaning and preprocessing
+- Exploratory data analysis
+- Regression modeling
+- Machine learning workflows
+- Feature engineering
+- Statistical visualization
+- Predictive analytics
+- Business-focused data storytelling
+
+---
+
+## Files Included
+- `Airline Price Analysis.ipynb`
+
+---
+
+## Future Improvements
+Potential future enhancements include:
+- Time-series forecasting models
+- Additional economic indicators
+- Airline-specific pricing segmentation
+- Real-time fuel market integration
+- Interactive dashboard visualization
+- Advanced ensemble machine learning models
+
+```
