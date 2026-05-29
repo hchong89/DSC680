@@ -80,7 +80,7 @@ The visualizations focused on highlighting economic differences and the impact o
 
 ## Files Included
 - `Childcare Cost Data Storytelling Project.ipynb`
-- 'Childcare_Webinar_Deck.pptx'
+- `Childcare_Webinar_Deck.pptx`
 
 ---
 
